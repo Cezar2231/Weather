@@ -33,8 +33,6 @@ const cities = [
     "Димово", "Брусарци", "Китен", "Клисура", "Плиска", "Маджарово", "Мелник", "Грамада", "Сърница"
 ];
 
-
-// Function to filter and display cities in the select element
 function filterCities() {
     const searchTerm = citySearch.value.toLowerCase();
     citySelect.innerHTML = ''; 
@@ -52,7 +50,6 @@ function filterCities() {
     }
 }
 
-// Function to fetch and display weather data
 async function fetchWeather(city) {
     weatherList.innerHTML = '';
 
@@ -80,21 +77,36 @@ function getDayName(dateString) {
     return new Intl.DateTimeFormat('bg-BG', options).format(date);
 }
 
+function formatDate(inputDate) {
+    const parts = inputDate.split('-');
+    return `${parts[2]}.${parts[1]}.${parts[0]}`;
+}
+
+let currentDate = formatDate(new Date().toJSON().slice(0, 10));
+
 function displayWeather(forecastData) {
     const location = forecastData.location;
     const current = forecastData.current;
     const forecastDays = forecastData.forecast.forecastday;
 
-    function formatDate(inputDate) {
-        const parts = inputDate.split('-');
-        return `${parts[2]}.${parts[1]}.${parts[0]}`;
+    const currentWeatherItem = document.createElement('div');
+    currentWeatherItem.className = 'frame current-weather-frame'; 
+
+    // Determine weather condition class based on current condition icon
+    let weatherConditionClass = '';
+    if (current.condition.icon.includes('clear')) {
+        weatherConditionClass = 'sunny-weather-condition';
+    } else if (current.condition.icon.includes('rain') || current.condition.icon.includes('shower')) {
+        weatherConditionClass = 'rainy-weather-condition';
+    } else if (current.condition.icon.includes('cloud') || current.condition.icon.includes('overcast')) {
+        weatherConditionClass = 'cloudy-weather-condition';
+    } else if (current.condition.icon.includes('night')){
+        weatherConditionClass = 'moon-weather-condition';
+    } else {
+        weatherConditionClass = 'default-weather-condition'; 
     }
 
-    let currentDate = formatDate(new Date().toJSON().slice(0, 10));
-
     // Current day
-    const currentWeatherItem = document.createElement('div');
-    currentWeatherItem.className = 'frame';
     currentWeatherItem.innerHTML = `
         <h3 class="heading">В момента в ${location.name}</h3>
         <p class="date element">(${currentDate})</p>
@@ -103,29 +115,42 @@ function displayWeather(forecastData) {
         <p class="element">${current.condition.text}</p>
         <img class="icon" src="${current.condition.icon}" alt="${current.condition.text}">
     `;
+
+    // Add the weather condition class to the current-weather-frame
+    currentWeatherItem.classList.add(weatherConditionClass);
+
     weatherList.appendChild(currentWeatherItem);
 
+    // TODO add the same conditions for the next 2 days
     // Next 2 days
     forecastDays.forEach(day => {
         const dayName = getDayName(day.date);
         const forecastItem = document.createElement('div');
         forecastItem.className = 'frame';
+
         forecastItem.innerHTML = `
             <h3 class="heading">${dayName}</h3>
             <p class="date element">(${formatDate(day.date)})</p>
-            <p class="element">${day.day.mintemp_c}°C</p>
-            <p class="element">${day.day.maxtemp_c}°C</p>
+            <p class="element">${day.day.mintemp_c}°C / ${day.day.maxtemp_c}°C</p>
             <p class="element">${day.day.condition.text}</p>
             <img class="element icon" src="${day.day.condition.icon}" alt="${day.day.condition.text}">
             <button class="btn" onclick="showDetails('${day.date}', ${day.day.avgtemp_c}, ${day.day.maxtemp_c}, ${day.day.mintemp_c}, ${day.day.maxwind_kph}, ${day.day.avghumidity}, '${day.day.condition.text}', ${day.day.uv}, ${day.day.daily_chance_of_rain}, ${day.day.daily_chance_of_snow}, '${day.astro.sunrise}', '${day.astro.sunset}')">Виж повече</button>
+            <div class="hourly-container">
+                ${day.hour.map(hour => `
+                    <div class="hourly-item">
+                        <img src="${hour.condition.icon}" alt="${hour.condition.text}">
+                        <p>${convertTo24Hour(hour.time.split(' ')[1])}</p>
+                        <p>${hour.temp_c}°C</p>
+                    </div>
+                `).join('')}
+            </div>
         `;
+
         weatherList.appendChild(forecastItem);
     });
 }
 
- // Function that convers AM and PM into 24 hours
 function convertTo24Hour(time12h) {
-
     const [time, modifier] = time12h.split(' ');
     const [hours, minutes] = time.split(':');
 
@@ -143,7 +168,7 @@ function convertTo24Hour(time12h) {
 }
 
 function showDetails(date, tempC, maxTemp, minTemp, maxWind, avgHumidity, condition, uvIndex, precipChance, snowChance, sunrise, sunset) {
-    document.getElementById('selectedDate').textContent = date;
+    document.getElementById('selectedDate').textContent = formatDate(date);
     document.getElementById('tempC').textContent = tempC + '°C';
     document.getElementById('maxTemp').textContent = maxTemp + '°C';
     document.getElementById('minTemp').textContent = minTemp + '°C';
@@ -157,17 +182,13 @@ function showDetails(date, tempC, maxTemp, minTemp, maxWind, avgHumidity, condit
     document.getElementById('sunrise').textContent = convertTo24Hour(sunrise);
     document.getElementById('sunset').textContent = convertTo24Hour(sunset);
 
-    detailsTable.style.display = 'flex';
+    detailsTable.style.display = 'block';
 }
 
-// Event listener for city search input
 citySearch.addEventListener('input', filterCities);
-
-// Event listener for city select change
 citySelect.addEventListener('change', () => {
     const selectedCity = citySelect.value;
     fetchWeather(selectedCity);
 });
 
-// Initial call to display all cities and fetch weather for the first city
 filterCities();
