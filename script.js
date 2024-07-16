@@ -90,20 +90,20 @@ function displayWeather(forecastData) {
     const forecastDays = forecastData.forecast.forecastday;
 
     const currentWeatherItem = document.createElement('div');
-    currentWeatherItem.className = 'frame current-weather-frame'; 
+    currentWeatherItem.className = 'frame';
 
     // Determine weather condition class based on current condition icon
     let weatherConditionClass = '';
-    if (current.condition.icon.includes('clear')) {
+    if (current.condition.text.includes('Слънчево')) {
         weatherConditionClass = 'sunny-weather-condition';
-    } else if (current.condition.icon.includes('rain') || current.condition.icon.includes('shower')) {
+    } else if (current.condition.text.includes('Дъжд') || current.condition.text.includes('Дъждове')) {
         weatherConditionClass = 'rainy-weather-condition';
-    } else if (current.condition.icon.includes('cloud') || current.condition.icon.includes('overcast')) {
+    } else if (current.condition.text.includes('Облачно') || current.condition.text.includes('Облаци')) {
         weatherConditionClass = 'cloudy-weather-condition';
-    } else if (current.condition.icon.includes('night')){
+    } else if (current.condition.text.includes('Ясно')){
         weatherConditionClass = 'moon-weather-condition';
     } else {
-        weatherConditionClass = 'default-weather-condition'; 
+        weatherConditionClass = 'default-weather-condition';
     }
 
     // Current day
@@ -115,18 +115,30 @@ function displayWeather(forecastData) {
         <p class="element">${current.condition.text}</p>
         <img class="icon" src="${current.condition.icon}" alt="${current.condition.text}">
     `;
-
-    // Add the weather condition class to the current-weather-frame
+    console.log(current.condition.text);
+    // Add the weather condition class
     currentWeatherItem.classList.add(weatherConditionClass);
 
     weatherList.appendChild(currentWeatherItem);
 
-    // TODO add the same conditions for the next 2 days
     // Next 2 days
-    forecastDays.forEach(day => {
+    forecastDays.forEach((day) => {
         const dayName = getDayName(day.date);
         const forecastItem = document.createElement('div');
         forecastItem.className = 'frame';
+        //TODO add more conditions and css urls
+        let dayWeatherConditionClass = '';
+        if (day.day.condition.text.includes('Слънчево')) {
+            dayWeatherConditionClass = 'sunny-weather-condition';
+        } else if (day.day.condition.text.includes('Дъжд') || day.day.condition.text.includes('Дъждове')) {
+            dayWeatherConditionClass = 'rainy-weather-condition';
+        } else if (day.day.condition.text.includes('Облачно') || day.day.condition.text.includes('Облаци')) {
+            dayWeatherConditionClass = 'cloudy-weather-condition';
+        } else if (day.day.condition.text.includes('Ясно')) {
+            dayWeatherConditionClass = 'moon-weather-condition';
+        } else {
+            dayWeatherConditionClass = 'default-weather-condition';
+        }
 
         forecastItem.innerHTML = `
             <h3 class="heading">${dayName}</h3>
@@ -145,10 +157,14 @@ function displayWeather(forecastData) {
                 `).join('')}
             </div>
         `;
+                    console.log(day.day.condition.text);
+        // Add the weather condition class to the forecast item
+        forecastItem.classList.add(dayWeatherConditionClass);
 
         weatherList.appendChild(forecastItem);
     });
 }
+
 
 function convertTo24Hour(time12h) {
     const [time, modifier] = time12h.split(' ');
