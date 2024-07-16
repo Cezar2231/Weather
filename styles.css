@@ -220,9 +220,17 @@ h3::first-letter {
     height: 394.8px;
   }
   #divElement{
-    width: 200px;
+    width: 250px;
   }
   #citySelect{
     width: 140px;
   }
 }
+
+@media only screen and (max-width: 450px) {
+  .box{
+    display: block;
+    height: 20px;
+  }
+}
+
