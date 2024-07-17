@@ -96,9 +96,9 @@ function displayWeather(forecastData) {
     let weatherConditionClass = '';
     if (current.condition.text.includes('Слънчево')) {
         weatherConditionClass = 'sunny-weather-condition';
-    } else if (current.condition.text.includes('Дъжд') || current.condition.text.includes('Дъждове')) {
+    } else if (current.condition.text.includes('Дъжд') || current.condition.text.includes('дъждове')) {
         weatherConditionClass = 'rainy-weather-condition';
-    } else if (current.condition.text.includes('Облачно') || current.condition.text.includes('Облаци')) {
+    } else if (current.condition.text.includes('Облачно') || current.condition.text.includes('облаци')) {
         weatherConditionClass = 'cloudy-weather-condition';
     } else if (current.condition.text.includes('Ясно')){
         weatherConditionClass = 'moon-weather-condition';
@@ -115,7 +115,6 @@ function displayWeather(forecastData) {
         <p class="element">${current.condition.text}</p>
         <img class="icon" src="${current.condition.icon}" alt="${current.condition.text}">
     `;
-    console.log(current.condition.text);
     // Add the weather condition class
     currentWeatherItem.classList.add(weatherConditionClass);
 
@@ -130,9 +129,9 @@ function displayWeather(forecastData) {
         let dayWeatherConditionClass = '';
         if (day.day.condition.text.includes('Слънчево')) {
             dayWeatherConditionClass = 'sunny-weather-condition';
-        } else if (day.day.condition.text.includes('Дъжд') || day.day.condition.text.includes('Дъждове')) {
+        } else if (day.day.condition.text.includes('Дъжд') || day.day.condition.text.includes('дъждове')) {
             dayWeatherConditionClass = 'rainy-weather-condition';
-        } else if (day.day.condition.text.includes('Облачно') || day.day.condition.text.includes('Облаци')) {
+        } else if (day.day.condition.text.includes('Облачно') || day.day.condition.text.includes('облаци')) {
             dayWeatherConditionClass = 'cloudy-weather-condition';
         } else if (day.day.condition.text.includes('Ясно')) {
             dayWeatherConditionClass = 'moon-weather-condition';
@@ -151,13 +150,12 @@ function displayWeather(forecastData) {
                 ${day.hour.map(hour => `
                     <div class="hourly-item">
                         <img src="${hour.condition.icon}" alt="${hour.condition.text}">
-                        <p>${convertTo24Hour(hour.time.split(' ')[1])}</p>
-                        <p>${hour.temp_c}°C</p>
+                        <p class="hourly-element">${convertTo24Hour(hour.time.split(' ')[1])}</p>
+                        <p class="hourly-element">${hour.temp_c}°C</p>
                     </div>
                 `).join('')}
             </div>
         `;
-                    console.log(day.day.condition.text);
         // Add the weather condition class to the forecast item
         forecastItem.classList.add(dayWeatherConditionClass);
 

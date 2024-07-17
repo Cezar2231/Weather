@@ -159,6 +159,10 @@ h3::first-letter {
   margin-bottom: 5px;
 }
 
+.hourly-element{
+  margin: 0.2rem;
+}
+
 /* TODO add background images */ 
 
 .sunny-weather-condition {
