@@ -198,6 +198,34 @@ function showDetails(date, tempC, maxTemp, minTemp, maxWind, avgHumidity, condit
 
     detailsTable.style.display = 'block';
 }
+async function getCityName(lat, lon) {
+    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=bg`);
+    const data = await response.json();
+    return data.address.city;
+}
+
+function fetchWeatherByLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            try {
+                const city = await getCityName(lat, lon);
+                citySelect.value = city;
+                fetchWeather(city);
+            } catch (error) {
+                console.error(error);
+                weatherList.innerHTML = '<p>Грешка при получаване на данни за местоположението.</p>';
+            }
+        }, (error) => {
+            console.error(error);
+            weatherList.innerHTML = '<p>Грешка при получаване на местоположението.</p>';
+        });
+    } else {
+        weatherList.innerHTML = '<p>Геолокацията не се поддържа от този браузър.</p>';
+    }
+}
 
 citySearch.addEventListener('input', filterCities);
 citySelect.addEventListener('change', () => {
@@ -206,3 +234,4 @@ citySelect.addEventListener('change', () => {
 });
 
 filterCities();
+fetchWeatherByLocation();
