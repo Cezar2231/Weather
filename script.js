@@ -95,11 +95,12 @@ function displayWeather(forecastData) {
 
     const sunElement = document.querySelector('.sun');
     const starsBg = document.querySelector('.bg');
+    const isNight = current.condition.icon.includes('/night/');
     
     if (current.condition.text.includes('Слънчево')) {
         sunElement.style.display = 'block'; 
         starsBg.style.display = 'none'; 
-    } else if (current.condition.text.includes('Ясно')) {
+    } else if (isNight) {
         sunElement.style.display = 'none'; 
         starsBg.style.display = 'block'; 
     } else {
