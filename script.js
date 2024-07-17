@@ -89,24 +89,41 @@ function displayWeather(forecastData) {
     const current = forecastData.current;
     const forecastDays = forecastData.forecast.forecastday;
 
+    // Clear previous weather data
+    weatherList.innerHTML = '';
+    removeRainyBackground(); 
+
+    const sunElement = document.querySelector('.sun');
+    const starsBg = document.querySelector('.bg');
+    
+    if (current.condition.text.includes('Слънчево')) {
+        sunElement.style.display = 'block'; 
+        starsBg.style.display = 'none'; 
+    } else if (current.condition.text.includes('Ясно')) {
+        sunElement.style.display = 'none'; 
+        starsBg.style.display = 'block'; 
+    } else {
+        sunElement.style.display = 'none'; 
+        starsBg.style.display = 'none'; 
+    }
+
     const currentWeatherItem = document.createElement('div');
     currentWeatherItem.className = 'frame';
 
-    // Determine weather condition class based on current condition icon
     let weatherConditionClass = '';
     if (current.condition.text.includes('Слънчево')) {
         weatherConditionClass = 'sunny-weather-condition';
     } else if (current.condition.text.includes('Дъжд') || current.condition.text.includes('дъждове')) {
         weatherConditionClass = 'rainy-weather-condition';
+        createRainyBackground(); // Create rainy background
     } else if (current.condition.text.includes('Облачно') || current.condition.text.includes('облаци')) {
         weatherConditionClass = 'cloudy-weather-condition';
-    } else if (current.condition.text.includes('Ясно')){
+    } else if (current.condition.text.includes('Ясно')) {
         weatherConditionClass = 'moon-weather-condition';
     } else {
         weatherConditionClass = 'default-weather-condition';
     }
 
-    // Current day
     currentWeatherItem.innerHTML = `
         <h3 class="heading">В момента в ${location.name}</h3>
         <p class="date element">(${currentDate})</p>
@@ -115,17 +132,15 @@ function displayWeather(forecastData) {
         <p class="element">${current.condition.text}</p>
         <img class="icon" src="${current.condition.icon}" alt="${current.condition.text}">
     `;
-    // Add the weather condition class
     currentWeatherItem.classList.add(weatherConditionClass);
 
     weatherList.appendChild(currentWeatherItem);
 
-    // Next 2 days
     forecastDays.forEach((day) => {
         const dayName = getDayName(day.date);
         const forecastItem = document.createElement('div');
         forecastItem.className = 'frame';
-        //TODO add more conditions and css urls
+
         let dayWeatherConditionClass = '';
         if (day.day.condition.text.includes('Слънчево')) {
             dayWeatherConditionClass = 'sunny-weather-condition';
@@ -156,12 +171,12 @@ function displayWeather(forecastData) {
                 `).join('')}
             </div>
         `;
-        // Add the weather condition class to the forecast item
         forecastItem.classList.add(dayWeatherConditionClass);
 
         weatherList.appendChild(forecastItem);
     });
 }
+
 
 
 function convertTo24Hour(time12h) {
@@ -198,6 +213,29 @@ function showDetails(date, tempC, maxTemp, minTemp, maxWind, avgHumidity, condit
 
     detailsTable.style.display = 'block';
 }
+
+function createRainyBackground() {
+    let hrElement;
+    const counter = 100;
+    for (let i = 0; i < counter; i++) {
+        hrElement = document.createElement('HR');
+        if (i === counter - 1) {
+            hrElement.className = 'thunder';
+        } else {
+            hrElement.style.left = Math.floor(Math.random() * window.innerWidth) + 'px';
+            hrElement.style.animationDuration = (0.2 + Math.random() * 0.3) + 's';
+            hrElement.style.animationDelay = Math.random() * 5 + 's';
+        }
+        document.body.appendChild(hrElement);
+    }
+}
+
+function removeRainyBackground() {
+    const hrElements = document.querySelectorAll('hr');
+    hrElements.forEach(hr => hr.remove());
+}
+
+
 async function getCityName(lat, lon) {
     const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=bg`);
     const data = await response.json();
@@ -235,3 +273,5 @@ citySelect.addEventListener('change', () => {
 
 filterCities();
 fetchWeatherByLocation();
+
+

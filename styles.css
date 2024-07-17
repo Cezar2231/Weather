@@ -1,3 +1,8 @@
+:root {
+  --thunder-duration: 10s;
+  --thunder-delay: 5s;
+}
+
 html {
 	min-height: 100%;
 	scroll-behavior: smooth;
@@ -6,11 +11,12 @@ html {
 
 body {
   font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
+  background: linear-gradient(to bottom, #202020, #111119);
   margin: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
 }
 
 h3::first-letter {
@@ -202,6 +208,103 @@ h3::first-letter {
   color: #fff;
 }
 
+hr.thunder {
+  border: unset;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  animation-name: thunder;
+  animation-duration: var(--thunder-duration);
+  animation-timing-function: linear;
+  animation-delay: var(--thunder-delay);
+  animation-iteration-count: infinite;
+}
+
+hr:not(.thunder) {
+  width: 50px;
+  border-color: transparent;
+  border-right-color: rgba(255, 255, 255, 0.7);
+  border-right-width: 50px;
+  position: absolute;
+  bottom: 100%;
+  transform-origin: 100% 50%;
+  animation-name: rain;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; 
+  z-index: -1; 
+}
+@keyframes blink {
+  0%   { opacity: 0; }
+  50% { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+.stars-bg__star {
+  opacity: 0;
+  animation: blink 3s infinite;
+}
+.stars-bg__blink-2 {
+  animation-delay: 1s;
+}
+.stars-bg__blink-3 {
+  animation-delay: 2s;
+}
+
+.sun{
+  position:absolute;
+  width: 200px;
+  height: 200px;
+  top: 20px;
+  right: 20px;
+  background: #ffdd50;
+  border-radius: 50%;
+  animation: shines 4s ease-in-out infinite;
+  display: none
+}
+
+
+
+@keyframes shines{
+  50%{
+    box-shadow: 0 0 20px #ffdd50,
+                0 0 60px #ffdd50,
+                0 0 250px #ffdd50;
+  }
+}
+
+@keyframes rain {
+  from {
+    transform: rotate(105deg) translateX(0);
+  }
+  to {
+    transform: rotate(105deg) translateX(calc(100vh + 20px));
+  }
+}
+
+@keyframes thunder {
+  0% {
+    background-color: transparent;
+  }
+  1% {
+    background-color: white;
+  }
+  2% {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  8% {
+    background-color: transparent;
+  }
+}
+
 
 @media only screen and (min-width: 1061px) {
   #divElement {
@@ -237,4 +340,3 @@ h3::first-letter {
     height: 20px;
   }
 }
-
