@@ -67,7 +67,7 @@ async function fetchWeather(city) {
         displayWeather(forecastData);
     } catch (error) {
         console.error(error);
-        weatherList.innerHTML = '<p>Грешка при получаване на данни за времето.</p>';
+        weatherList.innerHTML = '<p class="error">Грешка при получаване на данни за времето.</p>';
     }
 }
 
@@ -94,15 +94,22 @@ function displayWeather(forecastData) {
     removeRainyBackground(); 
 
     const sunElement = document.querySelector('.sun');
+    const cloudElement = document.querySelector('.cloud');
     const starsBg = document.querySelector('.bg');
     const isNight = current.condition.icon.includes('/night/');
     
     if (current.condition.text.includes('Слънчево')) {
         sunElement.style.display = 'block'; 
         starsBg.style.display = 'none'; 
+        cloudElement.style.display = 'none';
     } else if (isNight) {
         sunElement.style.display = 'none'; 
+        cloudElement.style.display = 'none';
         starsBg.style.display = 'block'; 
+    } else if (current.condition.text.includes('облачно')) {
+        sunElement.style.display = 'none'; 
+        starsBg.style.display = 'none';
+        cloudElement.style.display = 'block'; 
     } else {
         sunElement.style.display = 'none'; 
         starsBg.style.display = 'none'; 
@@ -117,9 +124,9 @@ function displayWeather(forecastData) {
     } else if (current.condition.text.includes('Дъжд') || current.condition.text.includes('дъждове')) {
         weatherConditionClass = 'rainy-weather-condition';
         createRainyBackground(); // Create rainy background
-    } else if (current.condition.text.includes('Облачно') || current.condition.text.includes('облаци')) {
+    } else if (current.condition.text.includes('Облачно') || current.condition.text.includes('облачно')) {
         weatherConditionClass = 'cloudy-weather-condition';
-    } else if (current.condition.text.includes('Ясно')) {
+    } else if (current.condition.icon.includes('/night/')) {
         weatherConditionClass = 'moon-weather-condition';
     } else {
         weatherConditionClass = 'default-weather-condition';

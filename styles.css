@@ -169,6 +169,10 @@ h3::first-letter {
   margin: 0.2rem;
 }
 
+.error{
+  color: #fff;
+}
+
 /* TODO add background images */ 
 
 .sunny-weather-condition {
@@ -176,7 +180,7 @@ h3::first-letter {
   background-size: cover;
   background-position: center; 
   background-repeat: no-repeat; 
-  color: #333;
+  color: #fff;
 }
 
 .rainy-weather-condition {
@@ -192,7 +196,7 @@ h3::first-letter {
   background-size: cover;
   background-position: center; 
   background-repeat: no-repeat; 
-  color: #333; 
+  color: #fff; 
 }
 
 .default-weather-condition {
@@ -255,6 +259,18 @@ hr:not(.thunder) {
   animation-delay: 2s;
 }
 
+.cloud{
+  position: fixed;;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('images-weather-condition/cloud.png');
+  animation: cloud 60s linear infinite;
+  display: none;
+  z-index: -1;
+}
+
 .sun{
   position:absolute;
   width: 200px;
@@ -266,6 +282,15 @@ hr:not(.thunder) {
   animation: shines 4s ease-in-out infinite;
   display: none;
   z-index: -1;
+}
+
+@keyframes cloud {
+  0%{
+    background-position: 0px;
+  }
+  100%{
+    background-position: 5440px;
+  }
 }
 
 @keyframes blink {
@@ -339,5 +364,6 @@ hr:not(.thunder) {
   .box{
     display: block;
     height: 20px;
+    margin-bottom: 5px;
   }
 }
