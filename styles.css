@@ -264,7 +264,8 @@ hr:not(.thunder) {
   background: #ffdd50;
   border-radius: 50%;
   animation: shines 4s ease-in-out infinite;
-  display: none
+  display: none;
+  z-index: -1;
 }
 
 @keyframes blink {
