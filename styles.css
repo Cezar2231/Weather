@@ -274,7 +274,7 @@ hr:not(.thunder) {
 }
 
 .sun{
-  position:absolute;
+  position:fixed;
   width: 200px;
   height: 200px;
   top: 20px;
