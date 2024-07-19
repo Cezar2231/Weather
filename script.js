@@ -220,6 +220,7 @@ function showDetails(date, tempC, maxTemp, minTemp, maxWind, avgHumidity, condit
     document.getElementById('sunset').textContent = convertTo24Hour(sunset);
 
     detailsTable.style.display = 'block';
+    detailsTable.scrollIntoView({ behavior: 'smooth' });
 }
 
 function createRainyBackground() {
