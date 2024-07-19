@@ -214,7 +214,8 @@ h3::first-letter {
 
 hr.thunder {
   border: unset;
-  position: absolute;
+  position: fixed;
+  z-index: -1;
   width: 100vw;
   height: 100vh;
   animation-name: thunder;
@@ -229,7 +230,7 @@ hr:not(.thunder) {
   border-color: transparent;
   border-right-color: rgba(255, 255, 255, 0.7);
   border-right-width: 50px;
-  position: absolute;
+  position: fixed;
   bottom: 100%;
   transform-origin: 100% 50%;
   animation-name: rain;
@@ -266,6 +267,7 @@ hr:not(.thunder) {
   width: 100%;
   height: 100%;
   background: url('images-weather-condition/cloud.png');
+  background-size: cover;
   animation: cloud 60s linear infinite;
   display: none;
   z-index: -1;
