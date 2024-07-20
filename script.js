@@ -2,6 +2,12 @@ const citySearch = document.getElementById('citySearch');
 const citySelect = document.getElementById('citySelect');
 const weatherList = document.getElementById('divElement');
 const detailsTable = document.getElementById('detailsTable');
+const sunElement = document.querySelector('.sun');
+const cloudElement = document.querySelector('.cloud');
+const starsBg = document.querySelector('.bg');
+
+const API_KEY = '2ef57e91d6msh1b06c205c21c7b9p125ae5jsn30212fd2eb40';
+const API_HOST = 'weatherapi-com.p.rapidapi.com';
 
 // List of all cities
 const cities = [
@@ -58,8 +64,8 @@ async function fetchWeather(city) {
     try {
         const forecastResponse = await fetch(baseUrl, {
             headers: {
-                'x-rapidapi-key': '2ef57e91d6msh1b06c205c21c7b9p125ae5jsn30212fd2eb40',
-                'x-rapidapi-host': 'weatherapi-com.p.rapidapi.com'
+                'x-rapidapi-key': API_KEY,
+                'x-rapidapi-host': API_HOST
             }
         });
         const forecastData = await forecastResponse.json();
@@ -71,10 +77,28 @@ async function fetchWeather(city) {
     }
 }
 
+// Utility functions
 function getDayName(dateString) {
     const date = new Date(dateString);
     const options = { weekday: 'long' };
     return new Intl.DateTimeFormat('bg-BG', options).format(date);
+}
+
+function convertTo24Hour(time12h) {
+    const [time, modifier] = time12h.split(' ');
+    const [hours, minutes] = time.split(':');
+
+    let hours24 = parseInt(hours, 10);
+
+    if (modifier === 'PM' && hours24 < 12) {
+        hours24 += 12;
+    } else if (modifier === 'AM' && hours24 === 12) {
+        hours24 = 0; 
+    }
+
+    const formattedHours = hours24.toString().padStart(2, '0');
+    const formattedMinutes = minutes.padStart(2, '0');
+    return `${formattedHours}:${formattedMinutes}`;
 }
 
 function formatDate(inputDate) {
@@ -93,9 +117,6 @@ function displayWeather(forecastData) {
     weatherList.innerHTML = '';
     removeRainyBackground(); 
 
-    const sunElement = document.querySelector('.sun');
-    const cloudElement = document.querySelector('.cloud');
-    const starsBg = document.querySelector('.bg');
     const isNight = current.condition.icon.includes('/night/');
     
     if (current.condition.text.includes('Слънчево')) {
@@ -186,24 +207,6 @@ function displayWeather(forecastData) {
 }
 
 
-
-function convertTo24Hour(time12h) {
-    const [time, modifier] = time12h.split(' ');
-    const [hours, minutes] = time.split(':');
-
-    let hours24 = parseInt(hours, 10);
-
-    if (modifier === 'PM' && hours24 < 12) {
-        hours24 += 12;
-    } else if (modifier === 'AM' && hours24 === 12) {
-        hours24 = 0; 
-    }
-
-    const formattedHours = hours24.toString().padStart(2, '0');
-    const formattedMinutes = minutes.padStart(2, '0');
-    return `${formattedHours}:${formattedMinutes}`;
-}
-
 function showDetails(date, tempC, maxTemp, minTemp, maxWind, avgHumidity, condition, uvIndex, precipChance, snowChance, sunrise, sunset) {
     document.getElementById('selectedDate').textContent = formatDate(date);
     document.getElementById('tempC').textContent = tempC + '°C';
@@ -243,7 +246,6 @@ function removeRainyBackground() {
     const hrElements = document.querySelectorAll('hr');
     hrElements.forEach(hr => hr.remove());
 }
-
 
 async function getCityName(lat, lon) {
     const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=bg`);
