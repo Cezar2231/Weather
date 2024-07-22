@@ -144,7 +144,7 @@ function displayWeather(forecastData) {
         weatherConditionClass = 'sunny-weather-condition';
     } else if (current.condition.text.includes('Дъжд') || current.condition.text.includes('дъждове')) {
         weatherConditionClass = 'rainy-weather-condition';
-        createRainyBackground(); // Create rainy background
+        createRainyBackground(current.condition.text); // Add rainy background
     } else if (current.condition.text.includes('Облачно') || current.condition.text.includes('облачно')) {
         weatherConditionClass = 'cloudy-weather-condition';
     } else if (current.condition.icon.includes('/night/')) {
@@ -226,12 +226,12 @@ function showDetails(date, tempC, maxTemp, minTemp, maxWind, avgHumidity, condit
     detailsTable.scrollIntoView({ behavior: 'smooth' });
 }
 
-function createRainyBackground() {
+function createRainyBackground(conditionText) {
     let hrElement;
     const counter = 100;
     for (let i = 0; i < counter; i++) {
         hrElement = document.createElement('HR');
-        if (i === counter - 1) {
+        if (conditionText.includes('гръм') && i === counter - 1) {
             hrElement.className = 'thunder';
         } else {
             hrElement.style.left = Math.floor(Math.random() * window.innerWidth) + 'px';
