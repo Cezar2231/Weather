@@ -127,7 +127,7 @@ function displayWeather(forecastData) {
         sunElement.style.display = 'none'; 
         cloudElement.style.display = 'none';
         starsBg.style.display = 'block'; 
-    } else if (current.condition.text.includes('облачно')) {
+    } else if (current.condition.text.includes('облачно') || current.condition.text.includes('дъжд')) {
         sunElement.style.display = 'none'; 
         starsBg.style.display = 'none';
         cloudElement.style.display = 'block'; 
@@ -145,6 +145,7 @@ function displayWeather(forecastData) {
     } else if (current.condition.text.includes('Дъжд') || current.condition.text.includes('дъждове')) {
         weatherConditionClass = 'rainy-weather-condition';
         createRainyBackground(current.condition.text); // Add rainy background
+        cloudElement.style.display = 'block';
     } else if (current.condition.text.includes('Облачно') || current.condition.text.includes('облачно')) {
         weatherConditionClass = 'cloudy-weather-condition';
     } else if (current.condition.icon.includes('/night/')) {
